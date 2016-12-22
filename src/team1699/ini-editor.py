@@ -6,8 +6,11 @@ import os
 import sys
 import ftplib
 import tkinter as tk
+import subprocess
 from tkinter import messagebox
 from tkinter import filedialog
+
+
 
 VERSION = "v0.1a-pre"
 
@@ -29,6 +32,7 @@ class App(tk.Tk):
         file = tk.Menu(self.toolbar, tearoff = 0)
         file.add_command(label = "Open", command = self.open_locally)
         file.add_command(label = "Save", command = self.save_locally)
+        file.add_command(label = "Save As", command = self.save_as_locally)
         file.add_separator()
         file.add_command(label = "Quit", command = self.quit)
 
@@ -108,13 +112,24 @@ class App(tk.Tk):
             pass
         pass
 
-
     def save_locally(self):
+        if (self.file == None):
+            self.save_as_locally()
+        else:
+            out = open(self.file, "w+")
+            out.write(self.text.get("1.0", "end"))
+            out.close()
+
+    def save_as_locally(self):
         outfile = filedialog.asksaveasfilename(defaultextension = ".ini",
                                                filetypes = (("Configuration files", "*.ini;*.cfg"), ("All files", "*.*")))
-        out = open(outfile, "w+")
-        out.write(self.text.get("1.0", "end"))
-        out.close()
+        if (outfile.strip() != ""):
+            self.file = outfile
+            out = open(outfile, "w+")
+            out.write(self.text.get("1.0", "end"))
+            out.close()
+        else:
+            messagebox.showinfo("ini-editor", "Not saved, no file selected")
 
     def connect(self):
         pass
@@ -138,27 +153,32 @@ class App(tk.Tk):
         pass
 
     def simulate(self):
+        # Check for None filepath
+        if (self.file == None):
+            # If no filepath, then see if there is anything in the textbox
+            if (self.text.get("1.0", "end").strip() == ""):
+                # Raise an error that there is no text in the textbox
+                messagebox.showerror("ini-editor", "Cannot run simulation, nothing to run!")
+            else:
+                # Raise an error that the file was not saved
+                messagebox.showerror("ini-editor", "Cannot run simulation, file was not saved.")
+        else:
+            # If there is a filepath, then run a simulation on it
+            subprocess.run("java -jar sim/bin/Simulator.jar " + self.file)
         pass
 
 def main():
+    # Check for an existing simulator directory
     if (not os.path.exists("sim")):
-        pass
-    app = App()
-    app.mainloop()
-
-
+        # No simulator directory found, raise an error and stop
+        # For some reason, Tk starts it's magic before stopping here, so there is a small Tk box that's made.
+        messagebox.showerror("ini-editor startup", "No simulation directory found, use start.py instead.")
+        sys.exit(1)
+    else:
+        # If the directory is correct, then start the application
+        app = App()
+        app.mainloop()
+    pass
 
 if __name__ == "__main__":
     main()
-    """if (not os.path.exists("sim")):
-        m = messagebox.showwarning("ini-editor", "Simulation directory not found, try running with start.py.")
-        if m == "ok":
-            app = App()
-            app.mainloop()
-        else:
-            sys.exit(1)
-        pass
-    else:
-        app=App()
-        app.mainloop()
-    pass"""
