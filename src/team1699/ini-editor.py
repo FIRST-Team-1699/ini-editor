@@ -45,6 +45,12 @@ class App(tk.Tk):
 
         self.toolbar.add_cascade(label = "Remote", menu = remote)
 
+        # Run menu
+        run = tk.Menu(self.toolbar, tearoff = 0)
+        run.add_command(label = "Run", command = self.simulate)
+
+        self.toolbar.add_cascade(label = "Run", menu = run)
+
         # About and Version buttons
         self.toolbar.add_command(label = "About", command = self.about)
         self.toolbar.add_command(label = "Version", command = self.version)
@@ -104,7 +110,8 @@ class App(tk.Tk):
 
 
     def save_locally(self):
-        outfile = filedialog.asksaveasfilename(defaultextension = ".ini", filetypes = (("Configuration files", "*.ini;*.cfg"), ("All files", "*.*")))
+        outfile = filedialog.asksaveasfilename(defaultextension = ".ini",
+                                               filetypes = (("Configuration files", "*.ini;*.cfg"), ("All files", "*.*")))
         out = open(outfile, "w+")
         out.write(self.text.get("1.0", "end"))
         out.close()
@@ -128,13 +135,30 @@ class App(tk.Tk):
         pass
 
     def save_remotely(self):
-        # check for changes / non-empty
         pass
 
-    def __load(self):
+    def simulate(self):
         pass
+
+def main():
+    if (not os.path.exists("sim")):
+        pass
+    app = App()
+    app.mainloop()
+
 
 
 if __name__ == "__main__":
-    app=App()
-    app.mainloop()
+    main()
+    """if (not os.path.exists("sim")):
+        m = messagebox.showwarning("ini-editor", "Simulation directory not found, try running with start.py.")
+        if m == "ok":
+            app = App()
+            app.mainloop()
+        else:
+            sys.exit(1)
+        pass
+    else:
+        app=App()
+        app.mainloop()
+    pass"""
