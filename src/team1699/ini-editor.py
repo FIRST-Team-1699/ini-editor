@@ -5,6 +5,7 @@ see https://stackoverflow.com/questions/3732605/add-advanced-features-to-a-tkint
 import os
 import sys
 import ftplib
+import threading
 import tkinter as tk
 import subprocess
 from tkinter import messagebox
@@ -153,6 +154,12 @@ class App(tk.Tk):
         pass
 
     def simulate(self):
+
+        # Function to run the simulation
+        def run():
+            subprocess.run("java -jar sim/bin/Simulator.jar " + self.file)
+        pass
+
         # Check for None filepath
         if (self.file == None):
             # If no filepath, then see if there is anything in the textbox
@@ -164,7 +171,8 @@ class App(tk.Tk):
                 messagebox.showerror("ini-editor", "Cannot run simulation, file was not saved.")
         else:
             # If there is a filepath, then run a simulation on it
-            subprocess.run("java -jar sim/bin/Simulator.jar " + self.file)
+            t = threading.Thread(target=run)
+            t.start()
         pass
 
 def main():
