@@ -74,6 +74,7 @@ class App(tk.Tk):
 
         # Finishing touches
         self.wm_title("ini-editor")
+        self.iconbitmap("data/icon.ico")
 
     # Make an About box
     def about(self):
@@ -154,28 +155,22 @@ class App(tk.Tk):
         pass
 
     def simulate(self):
-
         # Function to run the simulation
         def run():
             subprocess.run("java -jar sim/bin/Simulator.jar " + self.file)
         pass
 
-        # Check for None filepath
-        if (self.file == None):
-            # If no filepath, then see if there is anything in the textbox
-            if (self.text.get("1.0", "end").strip() == ""):
-                # Raise an error that there is no text in the textbox
-                messagebox.showerror("ini-editor", "Cannot run simulation, nothing to run!")
-            else:
-                # Raise an error that the file was not saved
-                messagebox.showerror("ini-editor", "Cannot run simulation, file was not saved.")
+        if (self.text.get("1.0", "end").strip() == ""):
+            # Raise an error that there is no text in the textbox
+            messagebox.showerror("ini-editor", "Cannot run simulation, nothing to run!")
         else:
+            self.save_locally()  # need to save file on local pc before running, even if it is a remote file
             # If there is a filepath, then run a simulation on it
             t = threading.Thread(target=run)
             t.start()
         pass
 
-def main():
+"""def main():
     # Check for an existing simulator directory
     if (not os.path.exists("sim")):
         # No simulator directory found, raise an error and stop
@@ -185,8 +180,9 @@ def main():
     else:
         # If the directory is correct, then start the application
         app = App()
+        app.iconbitmap("data/icon.ico")
         app.mainloop()
     pass
 
 if __name__ == "__main__":
-    main()
+    main()"""
