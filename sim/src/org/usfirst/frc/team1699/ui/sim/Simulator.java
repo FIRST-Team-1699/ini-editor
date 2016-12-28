@@ -3,10 +3,6 @@
  */
 package org.usfirst.frc.team1699.ui.sim;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,13 +12,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import org.usfirst.frc.team1699.utils.inireader.ConfigFile;
 import org.usfirst.frc.team1699.utils.inireader.ConfigLine;
 import org.usfirst.frc.team1699.utils.inireader.ConfigSection;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Simulator extends Application {
 
@@ -121,6 +121,7 @@ public class Simulator extends Application {
             }
         }
         stage.setTitle("ini-reader Simulator");
+        stage.getIcons().add(new Image(new File("data/favicon.png").toURI().toString()));
         stage.show();
     }
 
