@@ -74,7 +74,7 @@ class App(tk.Tk):
 
         # Finishing touches
         self.wm_title("ini-editor")
-        self.iconbitmap("data/favicon.ico")
+        self.iconbitmap("data/icon.ico")
 
     # Make an About box
     def about(self):

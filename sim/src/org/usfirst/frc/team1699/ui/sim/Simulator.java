@@ -121,7 +121,7 @@ public class Simulator extends Application {
             }
         }
         stage.setTitle("ini-reader Simulator");
-        stage.getIcons().add(new Image(new File("data/favicon.png").toURI().toString()));
+        stage.getIcons().add(new Image(new File("data/icon.png").toURI().toString()));
         stage.show();
     }
 
