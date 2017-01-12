@@ -8,10 +8,10 @@ import ftplib
 import threading
 import tkinter as tk
 import subprocess
+#import src.team1699.editor_input as inputs
 from tkinter import messagebox
 from tkinter import filedialog
-
-
+from tkinter import simpledialog
 
 VERSION = "v0.1a-pre"
 
@@ -31,6 +31,7 @@ class App(tk.Tk):
 
         # File menu
         file = tk.Menu(self.toolbar, tearoff = 0)
+        file.add_command(label = "New", command = self.new_file)
         file.add_command(label = "Open", command = self.open_locally)
         file.add_command(label = "Save", command = self.save_locally)
         file.add_command(label = "Save As", command = self.save_as_locally)
@@ -53,6 +54,7 @@ class App(tk.Tk):
         # Run menu
         run = tk.Menu(self.toolbar, tearoff = 0)
         run.add_command(label = "Run", command = self.simulate)
+        run.add_command(label = "Run with Logging", command = self.simulate_with_log)
 
         self.toolbar.add_cascade(label = "Run", menu = run)
 
@@ -71,6 +73,7 @@ class App(tk.Tk):
         self.text.pack(in_=text_frame, side="left", fill="both", expand=True)
         self.frame.pack(side="top", fill="x")
         text_frame.pack(side="bottom", fill="both", expand=True)
+        self.text.bind("<Control-s>", lambda l: self.save_locally())
 
         # Finishing touches
         self.wm_title("ini-editor")
@@ -78,15 +81,28 @@ class App(tk.Tk):
 
     # Make an About box
     def about(self):
+        # Make a messagebox to show the about info
         tk.messagebox.showinfo("ini-editor About",
-                               "The ini-editor is designed to assist in creating and editing configuration files."
-                               + " See the wiki for help at:\n https://github.com/FIRST-Team-1699/ini-editor/wiki"
+                               "ini-editor is designed to assist in creating and editing configuration files "
+                               + "that are used with the ini-reader library. See the wiki for help at:\n" +
+                               "https://github.com/FIRST-Team-1699/ini-editor/wiki"
                                )
     # Make a Version box
     def version(self):
+        # Make a messagebox to show the version info
         tk.messagebox.showinfo("ini-editor Version", "ini-editor: \t\t" + VERSION + "\ntkinter: \t\t" + str(tk.TkVersion)
                                + "\npython: \t\t" + str(sys.version_info[0]) + "." + str(sys.version_info[1]) + "."
                                + str(sys.version_info[2]))
+
+    def new_file(self):
+        # See if the user wants to save
+        if (messagebox.askquestion("ini-editor", "Would you like to save your current file?") != "no"):
+            # If the user wants to save, then save
+            self.save_locally()
+        # Clear the text box
+        self.text.delete("1.0", "end")
+        # Reset the file destination
+        self.file = None
 
     # Open a local file
     def open_locally(self):
@@ -136,8 +152,9 @@ class App(tk.Tk):
     def connect(self):
         pass
 
+
     def view_connect(self):
-        if (self.conenction != None):
+        if (self.connection != None):
             messagebox.showinfo("ini-reader", "")
 
     def disconnect(self):
@@ -170,19 +187,8 @@ class App(tk.Tk):
             t.start()
         pass
 
-"""def main():
-    # Check for an existing simulator directory
-    if (not os.path.exists("sim")):
-        # No simulator directory found, raise an error and stop
-        # For some reason, Tk starts it's magic before stopping here, so there is a small Tk box that's made.
-        messagebox.showerror("ini-editor startup", "No simulation directory found, use start.py instead.")
-        sys.exit(1)
-    else:
-        # If the directory is correct, then start the application
-        app = App()
-        app.iconbitmap("data/icon.ico")
-        app.mainloop()
-    pass
+    def simulate_with_log(self):
+        pass
 
 if __name__ == "__main__":
-    main()"""
+    print("This file should not be run!\n\nUsage: start.pyw")
