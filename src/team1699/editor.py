@@ -8,7 +8,7 @@ import ftplib
 import threading
 import tkinter as tk
 import subprocess
-#import src.team1699.editor_input as inputs
+import src.team1699.inputs as inputs
 from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import simpledialog
@@ -150,18 +150,40 @@ class App(tk.Tk):
             messagebox.showinfo("ini-editor", "Not saved, no file selected")
 
     def connect(self):
+        self.user = None
+        password = None
+        self.ip = inputs.ask_connection("ini-editor", "Remote Host:")
+        if ("@" in self.ip):
+            ip_s = self.ip.split("@")
+            self.ip = ip_s[1]
+            self.user = ip_s[0]
+            self.user, password = inputs.ask_login("ini-editor", username=self.user)
+        else:
+            self.user, password = inputs.ask_login("ini-editor")
+
+        try:
+            self.connection = ftplib.FTP(self.ip, self.user, password)
+        except ConnectionRefusedError:
+            res = messagebox.askretrycancel("ini-editor", "Connection refused")
+            if (res):
+                self.connect()
+            pass
         pass
 
 
     def view_connect(self):
         if (self.connection != None):
-            messagebox.showinfo("ini-reader", "")
+            messagebox.showinfo("ini-editor", "Connection info: \nUser:\t\t" + self.user + "\nHost: \t\t"
+                                + self.ip)
+        else:
+            messagebox.showerror("ini-editor", "No connection!")
 
     def disconnect(self):
         if (self.connection != None):
             self.connection.quit()
             messagebox.showinfo("ini-editor", "Disconnected")
             self.connection = None
+            self.file = None
         else:
             messagebox.showinfo("ini-editor", "No connection")
 
